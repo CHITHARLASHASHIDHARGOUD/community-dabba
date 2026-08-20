@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { io } from 'socket.io-client'
 
+const API_BASE = import.meta.env.VITE_API_URL || ''
+
 const instance = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE ? `${API_BASE}/api` : '/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -52,7 +54,9 @@ export const getSocket = () => {
 
   isConnecting = true
 
-  socket = io(window.location.origin, {
+  const SOCKET_URL = import.meta.env.VITE_API_URL || window.location.origin
+
+  socket = io(SOCKET_URL, {
     auth: { token },
     transports: ['websocket', 'polling'],
     reconnection: true,
