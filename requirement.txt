@@ -1,0 +1,215 @@
+================================================================================
+                    COMMUNITY DABBA 2.0 - REQUIREMENTS
+================================================================================
+
+PROJECT NAME   : Community Dabba 2.0
+TYPE           : Full-Stack Web Application (MERN Stack)
+PURPOSE        : Smart food donation & distribution platform connecting
+                 donors (food donors) with receivers (food receivers)
+
+================================================================================
+                        SYSTEM REQUIREMENTS
+================================================================================
+
+BACKEND:
+  - Runtime       : Node.js v18+ 
+  - Framework     : Express.js v4.22
+  - Database      : MongoDB v6+ (via Mongoose v8.24)
+  - Real-time     : Socket.IO v4.8
+  - Authentication: JWT (jsonwebtoken v9)
+  - Validation    : Zod v3.25
+  - File Upload   : Multer v1.4
+  - Password Hash : bcryptjs v2.4
+
+FRONTEND:
+  - Library       : React v19
+  - Build Tool    : Vite v8
+  - Styling       : Tailwind CSS v4
+  - Animations    : Framer Motion v13
+  - Charts        : Recharts v3
+  - Routing       : React Router v7
+  - State Mgmt    : React Query (TanStack Query v5)
+  - Forms         : React Hook Form v7 + Zod
+  - HTTP Client   : Axios v1.19
+  - Real-time     : Socket.IO Client v4.8
+  - Icons         : Lucide React
+
+DATABASE:
+  - MongoDB Atlas or local MongoDB instance
+  - Collections: users, meals, requests, conversations, messages,
+                 notifications, favorites, feedbacks, reports
+
+================================================================================
+                        USER ROLES
+================================================================================
+
+1. DONOR   - Registers to donate food
+             Can add/edit/delete meals
+             Can approve/reject/complete requests
+             Can chat with receivers
+
+2. RECEIVER - Registers to receive food
+              Can browse/explore available meals
+              Can request meals
+              Can chat with donors
+              Can rate completed transactions
+
+3. ADMIN   - Platform administrator (cannot be registered, only seeded)
+             Can view dashboard with stats
+             Can manage users (block/verify)
+             Can manage meals
+             Can view/manage reports
+
+================================================================================
+                        DATA MODELS
+================================================================================
+
+USER:
+  - name, email, password (hashed), phone, role, avatar
+  - location: { type: 'Point', coordinates: [lng, lat], address }
+  - rating, totalRatings, mealsDonated, mealsReceived
+  - badges, organization, isVerified, isActive
+
+MEAL:
+  - donor (ref: User), title, description, category, quantity, servings
+  - foodType (vegetarian/non-vegetarian/vegan)
+  - images: [{ url, publicId }]
+  - location: { type: 'Point', coordinates: [lng, lat], address }
+  - status (active/expiring_soon/completed/expired/donated)
+  - pickupInstructions, contactPreference, dietaryInfo
+  - availableUntil, preparedAt
+
+REQUEST:
+  - meal (ref: Meal), requester (ref: User), donor (ref: User)
+  - message, status, pickupCode, pickupTime
+  - statusHistory: [{ status, timestamp, note }]
+
+CONVERSATION:
+  - participants: [User, User], meal (ref: Meal)
+  - lastMessage (ref: Message), lastMessageAt
+
+MESSAGE:
+  - conversation (ref: Conversation), sender (ref: User), content
+
+NOTIFICATION:
+  - recipient (ref: User), sender (ref: User)
+  - type, title, message, data, isRead
+
+FAVORITE:
+  - user (ref: User), meal (ref: Meal)
+
+FEEDBACK:
+  - request (ref: Request), reviewer (ref: User), reviewee (ref: User)
+  - rating (1-5), comment
+
+REPORT:
+  - reporter (ref: User), targetType, targetId
+  - reason, description, status, adminNotes
+
+================================================================================
+                        API ENDPOINTS
+================================================================================
+
+AUTH:
+  POST   /api/auth/register     - Register new user
+  POST   /api/auth/login        - Login
+  GET    /api/auth/me           - Get current user
+  PUT    /api/auth/me           - Update profile
+  POST   /api/auth/change-password - Change password
+
+MEALS:
+  GET    /api/meals             - List meals (public)
+  GET    /api/meals/my          - List donor's own meals
+  GET    /api/meals/:id         - Get single meal
+  POST   /api/meals             - Create meal (with image upload)
+  PUT    /api/meals/:id         - Update meal
+  DELETE /api/meals/:id         - Delete meal
+
+REQUESTS:
+  POST   /api/requests          - Create request
+  GET    /api/requests/my       - Get receiver's requests
+  GET    /api/requests/received - Get donor's received requests
+  PATCH  /api/requests/:id/status - Update request status
+  POST   /api/requests/:id/verify-pickup - Verify pickup code
+  POST   /api/requests/:id/complete - Mark as completed
+  PATCH  /api/requests/:id/cancel - Cancel request
+
+MESSAGES:
+  GET    /api/messages/conversations - List conversations
+  POST   /api/messages/conversations - Create/find conversation
+  GET    /api/messages/conversations/:id - Get messages
+  POST   /api/messages          - Send message
+
+FAVORITES:
+  POST   /api/favorites/:mealId - Toggle favorite
+  GET    /api/favorites         - Get user's favorites
+
+NOTIFICATIONS:
+  GET    /api/notifications     - Get notifications
+  PATCH  /api/notifications/:id/read - Mark as read
+  PATCH  /api/notifications/read-all - Mark all read
+
+ADMIN:
+  GET    /api/admin/stats       - Dashboard statistics
+  GET    /api/admin/stats/public - Public stats (Landing page)
+  GET    /api/admin/analytics/meals - Meals over time
+  GET    /api/admin/analytics/categories - Category breakdown
+  GET    /api/admin/leaderboard - Top donors
+
+USERS (Admin):
+  GET    /api/users             - List users
+  PATCH  /api/users/:id/status  - Block/unblock user
+  PATCH  /api/users/:id/verify  - Toggle verification
+
+FEEDBACK:
+  POST   /api/feedback          - Submit feedback
+  GET    /api/feedback/:mealId  - Get meal feedback
+
+REPORTS:
+  POST   /api/reports           - Create report
+  GET    /api/reports/admin     - List all reports (admin)
+  PATCH  /api/reports/admin/:id - Update report status
+
+================================================================================
+                        REQUEST STATUS FLOW
+================================================================================
+
+  pending --> approved --> completed (direct)
+           \-> rejected
+           \-> cancelled
+
+  approved --> pickup_scheduled --> ready_for_pickup --> collected --> completed
+            \-> completed (direct)
+            \-> rejected
+
+================================================================================
+                        FILE STRUCTURE
+================================================================================
+
+community-dabba/
+  backend/
+    config/         - db.js, cloudinary.js, environment.js
+    controllers/    - auth, meal, request, message, notification,
+                      favorite, feedback, report, admin, user
+    middleware/      - auth.js, upload.js, rateLimiter.js, errorHandler.js
+    models/         - User, Meal, Request, Conversation, Message,
+                      Notification, Favorite, Feedback, Report
+    routes/         - auth, meals, requests, messages, notifications,
+                      favorites, feedback, reports, admin, users
+    sockets/        - Socket.IO setup and handlers
+    uploads/        - Local image storage (meals/)
+    validators/     - Zod schemas for request validation
+    app.js          - Express app configuration
+    server.js       - HTTP server + Socket.IO
+
+  frontend/
+    src/
+      api/          - Axios instance, API service modules
+      components/   - Reusable UI components
+      context/      - AuthContext (auth state management)
+      pages/        - Page components (22 pages)
+        admin/      - Admin-specific pages
+      layouts/      - Main layout wrapper
+    vite.config.js  - Vite + proxy configuration
+
+================================================================================

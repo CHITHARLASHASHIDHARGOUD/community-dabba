@@ -1,0 +1,306 @@
+================================================================================
+              COMMUNITY DABBA 2.0 - STEP BY STEP USAGE INSTRUCTIONS
+================================================================================
+
+================================================================================
+                    PART 1: SETUP & INSTALLATION
+================================================================================
+
+PREREQUISITES:
+  - Node.js v18+ installed
+  - MongoDB running locally OR MongoDB Atlas connection string
+  - Git (optional)
+
+STEP 1: Clone/Extract Project
+  > Extract the project folder to your desired location
+  > Open terminal in the project root directory
+
+STEP 2: Install Backend Dependencies
+  > cd backend
+  > npm install
+
+STEP 3: Install Frontend Dependencies
+  > cd ../frontend
+  > npm install
+
+STEP 4: Configure Environment
+  > Copy .env.example to .env in the backend folder
+  > Edit backend/.env and set:
+      PORT=5000
+      MONGODB_URI=mongodb://localhost:27017/community-dabba
+      JWT_SECRET=your_secret_key_here
+      CLIENT_URL=http://localhost:5173
+      NODE_ENV=development
+
+STEP 5: Seed the Database (Optional - creates test accounts)
+  > cd backend
+  > node utils/seed.js
+
+STEP 6: Start the Application
+  Terminal 1 (Backend):
+    > cd backend
+    > npm run dev
+
+  Terminal 2 (Frontend):
+    > cd frontend
+    > npm run dev
+
+STEP 7: Open Browser
+  > Go to http://localhost:5173
+
+================================================================================
+                    PART 2: TEST ACCOUNTS (after seeding)
+================================================================================
+
+  ADMIN:
+    Email    : admin@communitydabba.com
+    Password : admin123
+
+  DONOR:
+    Email    : ravi@example.com
+    Password : password123
+
+  RECEIVER:
+    Email    : amit@example.com
+    Password : password123
+
+================================================================================
+                    PART 3: AS A DONOR - STEP BY STEP
+================================================================================
+
+STEP 1: Register as Donor
+  1. Go to http://localhost:5173
+  2. Click "Sign Up" or navigate to /register
+  3. Fill in: Name, Email, Phone, Password
+  4. Select role: "Donor"
+  5. Click "Create Account"
+  6. You will be redirected to the Donor Dashboard
+
+STEP 2: Add Food (Create a Meal)
+  1. From Dashboard, click "Add Food" button
+  2. Fill in the form:
+     - Title: e.g., "Homemade Biryani"
+     - Description: Details about the food
+     - Category: Select from dropdown (Biryani, Meals, Rice, etc.)
+     - Quantity: e.g., "2 kg"
+     - Servings: Number of people it can serve
+     - Food Type: Veg / Non-Veg / Vegan
+     - Available Until: Set expiry date/time
+     - Pickup Location: Enter address or click "Use My Location"
+     - Pickup Instructions: e.g., "Ring the bell"
+     - Contact Preference: Chat / Phone / Both
+     - Dietary Info: Select tags (Gluten-Free, Homemade, etc.)
+     - Food Image: Upload a photo
+  3. Click "Add Food"
+  4. Meal appears in your dashboard and on receiver's browse page
+
+STEP 3: View Incoming Requests
+  1. From Dashboard, scroll to "Recent Requests" section
+  2. Or click "View All" to go to /requests
+  3. See all requests from receivers with their messages
+
+STEP 4: Approve or Reject a Request
+  1. Click "View" on a request
+  2. Read the receiver's message
+  3. Click "Approve" to accept the request
+     OR
+     Click "Reject" to decline
+
+STEP 5: Chat with Receiver
+  1. On the Request Detail page, scroll to the Chat section
+  2. Type your message and send
+  3. Receiver will see it in their Messages page
+
+STEP 6: Complete the Request
+  1. After the receiver picks up the food:
+  2. On the Request Detail page, click "Mark as Completed"
+  3. The request status updates to "Completed"
+  4. You can optionally rate the receiver
+
+STEP 7: Manage Your Meals
+  1. From Dashboard, go to "My Meals" or /donor/meals
+  2. Click "Edit" to update meal details
+  3. Click "Delete" to remove a meal
+
+================================================================================
+                    PART 4: AS A RECEIVER - STEP BY STEP
+================================================================================
+
+STEP 1: Register as Receiver
+  1. Go to http://localhost:5173
+  2. Click "Sign Up"
+  3. Fill in: Name, Email, Phone, Password
+  4. Select role: "Receiver"
+  5. Click "Create Account"
+  6. You will be redirected to the Receiver Dashboard
+
+STEP 2: Browse Available Food
+  1. From Dashboard, click "Browse Food" button
+     OR navigate to /explore
+  2. See all available meals with images and details
+  3. Use search bar to find specific food
+  4. Filter by category (Biryani, Meals, Snacks, etc.)
+  5. Filter by food type (Veg, Non-Veg, Vegan)
+
+STEP 3: View Meal Details
+  1. Click on any meal card
+  2. See full details: description, servings, location, donor info
+  3. Check expiry time and dietary information
+
+STEP 4: Request a Meal
+  1. On the Meal Detail page, click "Request Meal"
+  2. Optionally write a message to the donor
+     e.g., "Hi, can I pick up at 5 PM?"
+  3. Click "Send Request"
+  4. You'll see a confirmation toast
+
+STEP 5: Track Your Requests
+  1. From Dashboard, scroll to "My Active Requests"
+     OR go to /requests
+  2. See status: Pending / Approved / Rejected / Completed
+  3. Click "View" for full details
+
+STEP 6: Chat with Donor
+  1. On the Request Detail page, scroll to Chat section
+  2. Type your message and send
+  3. Donor will see it and can reply
+
+STEP 7: Pickup the Food
+  1. Wait for donor to approve your request
+  2. Once approved, coordinate pickup time via chat
+  3. Go to the pickup location
+  4. If pickup code is required, show it to the donor
+  5. After pickup, the request will be marked completed
+
+STEP 8: Save Favorite Meals
+  1. On any meal card, click the heart icon to save
+  2. View saved meals from Dashboard or /favorites
+
+STEP 9: Rate Your Experience
+  1. After a request is completed, you'll be prompted to rate
+  2. Select 1-5 stars
+  3. Leave an optional comment
+  4. Click "Submit"
+
+================================================================================
+                    PART 5: AS AN ADMIN - STEP BY STEP
+================================================================================
+
+STEP 1: Login as Admin
+  1. Go to http://localhost:5173/login
+  2. Enter: admin@communitydabba.com / admin123
+  3. Click "Login"
+  4. You will be redirected to the Admin Dashboard
+
+STEP 2: View Dashboard
+  1. See overview stats: Total Users, Total Meals, Completed Requests
+  2. View "Meals Over Time" bar chart
+  3. View "Food Categories" pie chart
+  4. See "Top Donors" leaderboard
+
+STEP 3: Manage Users
+  1. Navigate to /admin/users
+  2. See list of all users
+  3. Search by name or email
+  4. Filter by role (Donor/Receiver)
+  5. Click "Block" to block/unblock a user
+  6. Click "Verify" to verify/unverify a donor
+
+STEP 4: Manage Meals
+  1. Navigate to /admin/meals
+  2. See list of all meals
+  3. Search by title
+  4. Filter by status
+  5. Click "Delete" to remove inappropriate meals
+
+STEP 5: Manage Reports
+  1. Navigate to /admin/reports
+  2. See all user-submitted reports
+  3. Filter by status (Open/Investigating/Resolved/Dismissed)
+  4. Click "View" to see report details
+  5. Update status and add admin notes
+
+================================================================================
+                    PART 6: NAVIGATION GUIDE
+================================================================================
+
+COMMON PAGES (all roles):
+  /              - Landing page (public)
+  /explore       - Browse all available meals (public)
+  /meals/:id     - Meal detail page
+  /login         - Login page
+  /register      - Registration page
+  /profile       - User profile (edit name, phone, location)
+  /notifications - View notifications
+  /chat          - Messages list
+  /chat/:id      - Chat room with a specific person
+
+DONOR PAGES:
+  /donor/dashboard    - Donor dashboard
+  /donor/meals/new    - Add new meal
+  /donor/meals/:id/edit - Edit meal
+  /requests           - Received requests list
+  /requests/:id       - Request detail + chat
+
+RECEIVER PAGES:
+  /receiver/dashboard - Receiver dashboard
+  /requests           - My requests list
+  /requests/:id       - Request detail + chat
+  /favorites          - Saved meals
+
+ADMIN PAGES:
+  /admin              - Admin dashboard
+  /admin/users        - User management
+  /admin/meals        - Meal management
+  /admin/reports      - Report management
+
+================================================================================
+                    PART 7: COMPLETE WORKFLOW EXAMPLE
+================================================================================
+
+SCENARIO: Donor gives food to Receiver
+
+1. DONOR logs in, clicks "Add Food"
+2. DONOR fills form: "Chicken Biryani, 5 servings, Available until 8 PM"
+3. DONOR uploads a photo and submits
+4. RECEIVER logs in, sees the biryani on the dashboard
+5. RECEIVER clicks on the meal, clicks "Request Meal"
+6. RECEIVER writes: "Can I pick up at 6 PM?"
+7. DONOR sees notification, goes to Requests page
+8. DONOR clicks "View", reads the message
+9. DONOR clicks "Approve"
+10. DONOR replies in chat: "Yes, 6 PM works!"
+11. RECEIVER sees approval notification, opens chat
+12. RECEIVER confirms: "See you at 6 PM!"
+13. At 6 PM, RECEIVER arrives at the location
+14. DONOR hands over the food
+15. DONOR clicks "Mark as Completed"
+16. RECEIVER is prompted to rate the experience
+17. RECEIVER gives 5 stars and says "Great biryani!"
+18. Both dashboards update with the completed transaction
+19. ADMIN dashboard shows the completed request in stats
+
+================================================================================
+                    PART 8: TROUBLESHOOTING
+================================================================================
+
+PROBLEM: Images not showing
+  FIX: Restart both backend and frontend servers
+
+PROBLEM: White screen on dashboard
+  FIX: Check browser console for errors, restart frontend
+
+PROBLEM: "Unknown" in chat list
+  FIX: These are auto-created empty conversations, they will not
+       appear after restart (cleaned up automatically)
+
+PROBLEM: Status not updating
+  FIX: Refresh the page. All status changes auto-invalidate caches.
+
+PROBLEM: Can't login
+  FIX: Ensure MongoDB is running and backend server is started
+
+PROBLEM: Port already in use
+  FIX: Change PORT in backend/.env or kill the process using the port
+
+================================================================================
